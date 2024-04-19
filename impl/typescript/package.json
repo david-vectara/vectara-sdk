@@ -1,8 +1,8 @@
 {
   "name": "vectara",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "This is the typescript implementation of the Vectara SDK",
-  "main": "index.js",
+  "main": "src/core.js",
   "scripts": {
     "build": "tsc -p tsconfig-build.json",
     "test": "jest --testPathPattern=tests"
