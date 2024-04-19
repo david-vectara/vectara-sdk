@@ -1,5 +1,5 @@
 {
-  "name": "vectara-sdk",
+  "name": "vectara",
   "version": "0.0.1",
   "description": "This is the typescript implementation of the Vectara SDK",
   "main": "index.js",
