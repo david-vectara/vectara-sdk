@@ -1,10 +1,14 @@
 {
   "name": "vectara",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "This is the typescript implementation of the Vectara SDK",
-  "main": "src/core.ts",
+  "main": "./dist/core.js",
+  "module": "./dist/core.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [ "dist" ],
   "scripts": {
-    "build": "tsc -p tsconfig-build.json",
+    "build-bak": "tsc -p tsconfig-build.json",
+    "build": "tsup",
     "test": "jest --testPathPattern=tests"
   },
   "repository": {
@@ -227,6 +231,7 @@
     "to-fast-properties": "^2.0.0",
     "to-regex-range": "^5.0.1",
     "ts-node": "^10.9.2",
+    "tsup": "^8.0.2",
     "type-detect": "^4.0.8",
     "type-fest": "^0.21.3",
     "undici-types": "^5.26.5",
