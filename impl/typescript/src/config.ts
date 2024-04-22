@@ -8,13 +8,16 @@ class Auth {
     apiKey?: string;
     oauth2AppId?: string;
     oauth2AppSecret?: string;
+    authUrl?: string;
 
-    constructor(apiKey:string)
-    constructor(oauth2AppId:string,oauth2AppSecret:string)
-    constructor(apiKey?:string,oauth2AppId?:string,oauth2AppSecret?:string) {
+    constructor(apiKey?:string)
+    constructor(oauth2AppId?:string,oauth2AppSecret?:string, authUrl?:string)
+    constructor(apiKey?:string,oauth2AppId?:string,oauth2AppSecret?:string, authUrl?:string)
+    constructor(apiKey?:string,oauth2AppId?:string,oauth2AppSecret?:string, authUrl?:string) {
         this.apiKey = apiKey;
         this.oauth2AppId = oauth2AppId;
         this.oauth2AppSecret = oauth2AppSecret;
+        this.authUrl = authUrl;
     }
 
 }
@@ -32,19 +35,16 @@ class Config {
 
 class ConfigLoader {
 
-    profile: string
+    static DEFAULT_CONFIG = os.homedir() + '/.vec_auth.yaml';
+    static DEFAULT_PROFILE = "default";
 
+    constructor() {
 
-    constructor(profile?: string) {
-        if (profile != null) {
-            this.profile = profile
-        } else {
-            this.profile = 'default'
-        }
     }
 
-    load() {
-// Get document, or throw exception on error
+
+    load(configFilePath:string,profileName:string) {
+        // Get document, or throw exception on error
         const homedir = os.homedir();
 
         // TODO Use specified location
@@ -52,22 +52,31 @@ class ConfigLoader {
         // TODO Check if implicit file exists
 
         try {
-            const doc = yaml.load(fs.readFileSync(homedir + '/.vec_auth.yaml', 'utf8'));
-            console.log(doc);
+
+            const doc = yaml.load(fs.readFileSync(configFilePath, 'utf8'));
 
             // @ts-ignore
-            let profile = doc[this.profile];
+            let profile = doc[profileName];
+            let customerId = profile["customer_id"]
 
-            let auth_yaml = profile["auth"];
-            let apiKey = auth_yaml["api_key"]
-            let appClientId = auth_yaml["app_client_id"]
-            let appClientSecret = auth_yaml["app_client_secret"]
-            let authUrl = auth_yaml["auth_url"]
+            let authYaml = profile["auth"];
+            let apiKey = authYaml["api_key"]
+            let appClientId = authYaml["app_client_id"]
+            let appClientSecret = authYaml["app_client_secret"]
+            let authUrl = authYaml["auth_url"]
+
+            let auth = new Auth(apiKey, appClientId, appClientSecret, authUrl);
+
+            let config = new Config(customerId, auth);
 
             console.info("Loaded Configuration")
+            return config;
 
-        } catch (e) {
-            console.log(e);
+        } catch (error : any) {
+            if (error instanceof Error) {
+                console.error("Unable to load configuration due to : " + error.message);
+            }
+            throw error;
         }
     }
 
