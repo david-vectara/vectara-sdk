@@ -15,7 +15,7 @@ test('Verifies Authentication', async () => {
     console.info("We authenticated with token:\n" + target.token);
 
     // OAuth2 only tested at the moment as default profile.
-    const headerMap = target.getHttpHeaders();
+    const headerMap = await target.getHttpHeaders();
     expect(headerMap.has("Customer-Id")).toBe(true);
     expect(headerMap.has("Authorization")).toBe(true);
 
