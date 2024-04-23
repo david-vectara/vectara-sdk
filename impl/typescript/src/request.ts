@@ -1,7 +1,7 @@
-import { AxiosResponse } from 'axios';
+import {AxiosResponse} from 'axios';
 import axios from 'axios';
-import { AuthenticationUtil } from './auth'
-import { LooseObject } from './domain';
+import {AuthenticationUtil} from './auth'
+import {LooseObject} from './domain';
 import {OAuth2Token} from "@badgateway/oauth2-client";
 
 class Response {
@@ -21,56 +21,46 @@ class Response {
 
 class RequestUtil {
 
-    authenticationUtil : AuthenticationUtil
+    authenticationUtil: AuthenticationUtil
 
-    constructor(authenticationUtil : AuthenticationUtil) {
+    constructor(authenticationUtil: AuthenticationUtil) {
         this.authenticationUtil = authenticationUtil;
     }
 
     // TODO Review work on vectara-skunk-client signature
     // TODO Add test
-    request(operation: string, payload: any) : Promise<Response> {
+    request(operation: string, payload: any): Promise<Response> {
         // Build our url with the API and operation combination
         const url = "https://api.vectara.io/v1/" + operation;
 
         const headers: LooseObject = {'Content-Type': 'application/json', 'Accept': 'application/json'};
 
         // Set Authentication Headers
-        const authHeaders = this.authenticationUtil.getHttpHeaders()
-        authHeaders.forEach((value: string, key: string) => {
-            headers[key] = value
-        })
+        return this.authenticationUtil.getHttpHeaders().then((authHeaders) => {
+            authHeaders.forEach((value: string, key: string) => {
+                headers[key] = value
+            })
 
-        let config = {
-            headers: headers
-        }
+            let config = {
+                headers: headers
+            }
 
-        return axios.post(url, payload, config).then((response) => {
-            console.log("Response was [" + response.status + "]");
+            return axios.post(url, payload, config).then((response) => {
+                console.log("Response was [" + response.status + "]");
 
-            const success = (response.status === 200);
+                const success = (response.status === 200);
 
-            return new Response(response.status, response.statusText, success, response.data);
+                return new Response(response.status, response.statusText, success, response.data);
 
-        }).catch((error) => {
-            console.error("Error making request for operation [" + operation + "]: " + error.message)
-            throw error
+            }).catch((error) => {
+                console.error("Error making request for operation [" + operation + "]: " + error.message)
+                throw error
+            })
 
-
-        })
-
-        // return promise.then((value: OAuth2Token) => {
-        //     this.token = value;
-        //     console.log(this.token.accessToken)
-        //     return true;
-        // }).catch((error) => {
-        //     console.log("Unable to authenticate: " + error.message)
-        //     return false
-        // })
-
+        });
 
     }
 
 }
 
-export { RequestUtil, Response }
+export {RequestUtil, Response}

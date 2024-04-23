@@ -2,16 +2,20 @@ import { AuthenticationUtil } from './auth';
 import { RequestUtil } from './request';
 import { AdminService } from './admin';
 import { Config, ConfigLoader } from './config'
+import {QueryFacade, QueryService} from "./query";
 
 class Client {
 
 	customerId: string;
 	adminService: AdminService;
+	queryService: QueryService;
+	queryFacade: QueryFacade;
 
-
-	constructor(customerId: string, adminService: AdminService) {
+	constructor(customerId: string, adminService: AdminService, queryService : QueryService, queryFacade: QueryFacade) {
 		this.customerId = customerId;
 		this.adminService = adminService;
+		this.queryService = queryService;
+		this.queryFacade = queryFacade;
 	}
 
 	getCustomerId() {
@@ -56,7 +60,11 @@ class Factory {
 
 			const adminService = new AdminService(requestUtil);
 
-			const client =  new Client(config.customerId, adminService);
+			const queryService = new QueryService(requestUtil);
+
+			const queryFacade = new QueryFacade(config.customerId, queryService);
+
+			const client =  new Client(config.customerId, adminService, queryService, queryFacade);
 			console.info("Created client for customer [" + client.customerId + "]")
 			return client;
 		}).catch((error) => {

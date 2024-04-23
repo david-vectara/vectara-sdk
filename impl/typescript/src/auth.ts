@@ -1,5 +1,5 @@
 import {Config, ConfigLoader} from './config';
-import { OAuth2Client, OAuth2Token } from "@badgateway/oauth2-client";
+import {OAuth2Client, OAuth2Token} from "@badgateway/oauth2-client";
 
 class AuthenticationUtil {
 
@@ -8,9 +8,9 @@ class AuthenticationUtil {
     apiKey?: string;
     oauth2AppId?: string;
     oauth2AppSecret?: string;
-    oauth2authUrl?:string;
-    oauth2token?:any;
-    token?:OAuth2Token;
+    oauth2authUrl?: string;
+    oauth2token?: any;
+    token?: OAuth2Token;
 
     constructor(config: Config) {
         this.customerId = config.customerId;
@@ -57,8 +57,8 @@ class AuthenticationUtil {
             return this.authenticateOAuth2();
         } else {
             return new Promise((resolve, reject) => {
-               console.info("No need to authenticate with API_KEY");
-               resolve(true);
+                console.info("No need to authenticate with API_KEY");
+                resolve(true);
             });
         }
     }
@@ -74,7 +74,6 @@ class AuthenticationUtil {
 
         return promise.then((value: OAuth2Token) => {
             this.token = value;
-            console.log(this.token.accessToken)
             return true;
         }).catch((error) => {
             console.log("Unable to authenticate: " + error.message)
@@ -84,32 +83,43 @@ class AuthenticationUtil {
     }
 
     // TODO Add check for token expiry!!
-    getHttpHeaders(): Map<string,string> {
-        const result = new Map<string,string>
+    async getHttpHeaders(): Promise<Map<string, string>> {
+        const result = new Map<string, string>
 
         if (this.mode == "OAuth2") {
+
+            const currentTimestamp = Date.now()
+            const expiresTimestamp = ((this.token as OAuth2Token).expiresAt as number);
+
             result.set("Customer-Id", this.customerId);
 
-            // const accessToken = (this.token as AccessToken);
-            // if (accessToken.expired()) {
-            //     console.error("We're expired!!");
-            // } else {
-            //     console.info("We're not expired");
-            // }
-
-
-            const accessTokenText = (this.token as OAuth2Token).accessToken;
-
-            result.set("Authorization", "Bearer " + accessTokenText);
+            if (currentTimestamp > expiresTimestamp) {
+                return this.initialize().then((success) => {
+                    const accessTokenText = (this.token as OAuth2Token).accessToken;
+                    result.set("Authorization", "Bearer " + accessTokenText);
+                    return result;
+                }).catch((error) => {
+                    console.error("Unable to refresh OAuth2 Token");
+                    throw error;
+                });
+            } else {
+                console.info("OAuth2 Token Valid");
+                const accessTokenText = (this.token as OAuth2Token).accessToken;
+                result.set("Authorization", "Bearer " + accessTokenText);
+            }
         } else if (this.mode == "API Key") {
             result.set("customer-id", this.customerId);
             result.set("x-api-key", (this.apiKey as string));
         } else {
             throw new Error("Unexpected value for mode [" + this.mode + "]");
         }
-        return result;
-    }
 
+        // Asynchronous wrapper for most cases.
+        return new Promise((resolve, reject) => {
+            resolve(result);
+        });
+
+    }
 
 
 }
