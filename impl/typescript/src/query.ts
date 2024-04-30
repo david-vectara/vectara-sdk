@@ -65,13 +65,16 @@ class QueryFacade {
 
         // TODO Add Reranker
 
-        // TODO Add Summary
+        // Add Summary
         const summaries: Array<Summarizer> = [];
         if (buildSummary) {
             const summary: Summarizer = {
                 summarizerPromptName: "vectara-summary-ext-v1.2.0",
                 responseLang: "en",
                 maxSummarizedResults: 5
+                // TODO Add prompt text
+                // TODO Add chat
+
             };
             summaries.push(summary);
         }
@@ -103,8 +106,6 @@ class QueryFacade {
            return (value.responseSet as Array<ResponseSet>)[0];
         });
     }
-
-
 
 }
 

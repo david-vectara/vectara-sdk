@@ -11,7 +11,8 @@
   "scripts": {
     "build-bak": "tsc -p tsconfig-build.json",
     "build": "tsup",
-    "test": "jest --testPathPattern=tests"
+    "test": "jest --testPathPattern=tests",
+    "coverage": "jest --testPathPattern=tests --collectCoverage"
   },
   "repository": {
     "type": "git",
