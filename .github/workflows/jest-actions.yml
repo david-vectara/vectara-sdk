@@ -4,6 +4,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+    - shell: bash
+      env:
+        CUSTOMER_ID: ${{ secrets.CUSTOMER_ID }}
+        AUTH_APP_CLIENT_ID: ${{ secrets.AUTH_APP_CLIENT_ID }}
+        AUTH_APP_CLIENT_SECRET: ${{ secrets.AUTH_APP_CLIENT_SECRET }}
+        AUTH_AUTH_URL: ${{ secrets.AUTH_AUTH_URL }}
+      run: |
+        echo "default:" > /home/runner/.vec_auth.yaml
+        echo "    customer_id : \"$CUSTOMER_ID\"" >> /home/runner/.vec_auth.yaml
+        echo "    auth:" >> /home/runner/.vec_auth.yaml
+        echo "        app_client_id : \"$AUTH_APP_CLIENT_ID\"" >> /home/runner/.vec_auth.yaml
+        echo "        app_client_secret : \"$AUTH_APP_CLIENT_SECRET\"" >> /home/runner/.vec_auth.yaml
+        echo "        auth_url : \"$AUTH_AUTH_URL\"" >> /home/runner/.vec_auth.yaml
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
       with:
