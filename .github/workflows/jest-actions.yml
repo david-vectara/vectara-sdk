@@ -1,5 +1,8 @@
-name: CI
+name: Typescript Tests
 on: push
+  paths:
+  - impl/typescript
+
 jobs:
   build:
     runs-on: ubuntu-latest
