@@ -2,8 +2,11 @@ import {describe, expect, test, jest} from '@jest/globals';
 import {Factory} from "../src/core";
 import {ResponseSet, SummaryResponse} from "../src/dto";
 
+// Increase the default timeout as we're doing functional testing rather than
+// performance based testing.
+jest.setTimeout(30000)
+
 test('Verifies Creation of Batch Query', async () => {
-    jest.setTimeout(30000)
     const client = await (new Factory()).build();
     const target = client.queryFacade;
 
