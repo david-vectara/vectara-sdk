@@ -15,3 +15,18 @@ test('Verifies List Corpora', async () => {
 	});
 
 });
+
+test("Verifies Create Corpus", async () => {
+
+		let client = await new Factory().build();
+
+    const adminService = client.adminService;
+
+	const corpus : CorpusDto = { name: "Created from Typescript"};
+
+	console.log("Making request to list corpora");
+	const corpusId = await adminService.createCorpus(corpus);
+
+	expect(corpusId).toBeGreaterThan(0);
+
+})

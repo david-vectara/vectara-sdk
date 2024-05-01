@@ -1,18 +1,52 @@
-import {Semantics, Status} from "./enums";
+import {FilterAttributeLevel, FilterAttributeType, Semantics, Status} from "./enums";
+
+export interface StatusDto {
+    code: Status;
+    statusDetail?: string;
+    cause?: string;
+}
+
+export interface Dimension {
+    name: string;
+    description?: string;
+    servingDefault?: string;
+    indexingDefault?: string;
+}
+
+export interface FilterAttribute {
+    name: string;
+    description?: string;
+    indexed: boolean;
+    type: FilterAttributeType; // TODO FilterAttributeType
+    level: FilterAttributeLevel; // TODO FilterAttributeLevel
+}
+
+
 
 export interface CorpusDto {
-    id: number;
+    id?: number; // ID is only optional on creation.
     name: string;
-    description: string;
-    dtProvision: string;
-    enabled: boolean;
-    swapQenc: boolean;
-    swapIenc: boolean;
-    textless: boolean;
-    encrypted: boolean;
-    encoderId: string;
-    metadataMaxBytes: number;
-    faissIndexType: string;
+    description?: string;
+    dtProvision?: string;
+    enabled?: boolean;
+    swapQenc?: boolean;
+    swapIenc?: boolean;
+    textless?: boolean;
+    encrypted?: boolean;
+    encoderId?: string;
+    metadataMaxBytes?: number;
+    faissIndexType?: string;
+    customDimensions?: Array<Dimension>;
+    filterAttributes?: Array<FilterAttribute>;
+}
+
+export interface CreateCorpusRequestDto {
+    corpus: CorpusDto;
+}
+
+export interface CreateCorpusResponseDto {
+    corpusId: number;
+    status: StatusDto;
 }
 
 export interface ListCorporaResponseDto {
