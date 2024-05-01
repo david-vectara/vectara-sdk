@@ -12,6 +12,7 @@ test('Verifies List Corpora', async () => {
 
 	response.corpus.forEach((value: CorpusDto, index: number) => {
 		console.log("We found corpus [" + value.id + "] with name [" + value.name + "]")
+		expect(value.id).toBeGreaterThan(0);
 	});
 
 });
