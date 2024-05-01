@@ -1,8 +1,9 @@
 name: Typescript Tests
-on: push
-  paths:
-    - impl/typescript
-
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'impl/typescript'
 jobs:
   build:
     runs-on: ubuntu-latest
