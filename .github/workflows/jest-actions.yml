@@ -3,7 +3,7 @@ on:
   push:
     branches: [ main ]
     paths:
-      - 'impl/typescript'
+      - 'impl/typescript/**'
 jobs:
   build:
     runs-on: ubuntu-latest
