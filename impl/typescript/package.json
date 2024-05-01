@@ -1,6 +1,6 @@
 {
   "name": "vectara",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "This is the typescript implementation of the Vectara SDK",
   "main": "./dist/core.js",
   "module": "./dist/core.mjs",
