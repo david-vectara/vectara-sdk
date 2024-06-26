@@ -7,13 +7,10 @@
 
 	<groupId>com.vectara</groupId>
 	<artifactId>vectara-client</artifactId>
-	<version>0.0.2</version>
+	<version>0.0.3</version>
 
 	<name>Vectara Client</name>
-	<description>Non supported client libraries to invoke Vectara's REST APIs.
-		When we switch from the group "david" to
-		compan${project.build.directory} it will signify a move to a supported
-		version.</description>
+	<description>Client libraries to invoke Vectara's REST APIs. If you have any issues, please reach out to support@vectara.com</description>
 	<url>http://www.vectara.com</url>
 
 	<properties>

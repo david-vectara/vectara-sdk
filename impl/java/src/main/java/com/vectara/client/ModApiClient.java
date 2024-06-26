@@ -42,7 +42,8 @@ public class ModApiClient extends ApiClient {
 	 * @return The guessed Content-Type
 	 */
 	public String guessContentTypeFromFile(File file) {
-		return "application/octet-stream";
+		//return "application/octet-stream";
+		return super.guessContentTypeFromFile(file);
 	}
 
 }
