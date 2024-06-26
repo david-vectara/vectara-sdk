@@ -3,18 +3,13 @@ package com.vectara.client.services;
 import java.io.File;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.vectara.ApiClient;
 import com.vectara.ApiException;
 import com.vectara.api.UploadApi;
 import com.vectara.client.auth.AuthUtil;
 
-@Component
 public class UploadService {
 
-	@Autowired
 	private AuthUtil authUtil;
 	
 	public Boolean uploadStream(String fileName, String corpusKey, Map<String,Object> metadata) {

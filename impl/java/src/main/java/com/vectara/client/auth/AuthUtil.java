@@ -1,24 +1,16 @@
 package com.vectara.client.auth;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import com.vectara.ApiClient;
 import com.vectara.client.ModApiClient;
 import com.vectara.client.config.OAuth2Config;
 import com.vectara.client.config.VectaraConfig;
 
-@Component
 public class AuthUtil {
 
-	@Autowired
 	private OAuth2Util oauth2Util;
 
-	@Autowired
 	private VectaraConfig config;
 
 	private AuthenticationType type;

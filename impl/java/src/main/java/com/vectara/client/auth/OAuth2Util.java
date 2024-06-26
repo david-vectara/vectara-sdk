@@ -3,18 +3,19 @@ package com.vectara.client.auth;
 import java.net.URI;
 import java.text.MessageFormat;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import com.nimbusds.oauth2.sdk.*;
+import com.nimbusds.oauth2.sdk.AccessTokenResponse;
+import com.nimbusds.oauth2.sdk.AuthorizationGrant;
+import com.nimbusds.oauth2.sdk.ClientCredentialsGrant;
+import com.nimbusds.oauth2.sdk.TokenErrorResponse;
+import com.nimbusds.oauth2.sdk.TokenRequest;
+import com.nimbusds.oauth2.sdk.TokenResponse;
 import com.nimbusds.oauth2.sdk.auth.ClientAuthentication;
 import com.nimbusds.oauth2.sdk.auth.ClientSecretBasic;
 import com.nimbusds.oauth2.sdk.auth.Secret;
-import com.nimbusds.oauth2.sdk.id.*;
+import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.token.AccessToken;
 import com.vectara.client.config.VectaraConfig;
 
-@Component
 public class OAuth2Util {
 
 	private static final String DEFAULT_OAUTH2_URL = "https://vectara-prod-{0}.auth.us-west-2.amazoncognito.com/oauth2/token";
@@ -23,7 +24,6 @@ public class OAuth2Util {
 	
 	protected Long requestTs;
 
-	@Autowired
 	private VectaraConfig config;
 	
 	public OAuth2Util() {

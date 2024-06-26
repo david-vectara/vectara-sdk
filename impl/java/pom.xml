@@ -7,7 +7,7 @@
 
 	<groupId>com.vectara</groupId>
 	<artifactId>vectara-client</artifactId>
-	<version>0.0.3</version>
+	<version>0.0.4</version>
 
 	<name>Vectara Client</name>
 	<description>Client libraries to invoke Vectara's REST APIs. If you have any issues, please reach out to support@vectara.com</description>
@@ -74,16 +74,16 @@
 			<artifactId>jackson-dataformat-xml</artifactId>
 			<version>2.16.0</version>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-			<version>6.1.3</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-jdbc</artifactId>
-			<version>6.1.3</version>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>org.springframework</groupId>-->
+<!--			<artifactId>spring-context</artifactId>-->
+<!--			<version>6.1.3</version>-->
+<!--		</dependency>-->
+<!--		<dependency>-->
+<!--			<groupId>org.springframework</groupId>-->
+<!--			<artifactId>spring-jdbc</artifactId>-->
+<!--			<version>6.1.3</version>-->
+<!--		</dependency>-->
 		<dependency>
 			<groupId>org.apache.oltu.oauth2</groupId>
 			<artifactId>org.apache.oltu.oauth2.client</artifactId>
