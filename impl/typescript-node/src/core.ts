@@ -5,6 +5,15 @@ import {Config, ConfigLoader} from './config'
 import {QueryFacade, QueryService} from "./query";
 import {QueriesApi, QueriesApiApiKeys} from "./api/queriesApi";
 import {ChatsApi, ChatsApiApiKeys} from "./api/chatsApi";
+import {CorporaApi, CorporaApiApiKeys} from "./api/corporaApi";
+import {DocumentsApi, DocumentsApiApiKeys} from "./api/documentsApi";
+import {EncodersApi, EncodersApiApiKeys} from "./api/encodersApi";
+import {IndexApi, IndexApiApiKeys} from "./api/indexApi";
+import {JobsApi, JobsApiApiKeys} from "./api/jobsApi";
+import {LargeLanguageModelsApi, LargeLanguageModelsApiApiKeys} from "./api/largeLanguageModelsApi";
+import {RerankersApi, RerankersApiApiKeys} from "./api/rerankersApi";
+import {UploadApi, UploadApiApiKeys} from "./api/uploadApi";
+import {UsersApi, UsersApiApiKeys} from "./api/usersApi";
 
 class Client {
 
@@ -12,18 +21,42 @@ class Client {
     public adminService: AdminService;
     public queryService: QueryService;
     public queryFacade: QueryFacade;
-    public queriesApi: QueriesApi;
+
     public chatsApi: ChatsApi;
+    public corporaApi: CorporaApi;
+    public documentsApi: DocumentsApi;
+    public encodersApi: EncodersApi;
+    public indexApi: IndexApi;
+    public jobsApi: JobsApi;
+    public largeLanguageModelsApi: LargeLanguageModelsApi;
+    public queriesApi: QueriesApi;
+    public rerankersApi: RerankersApi;
+    public uploadApi: UploadApi;
+    public usersApi: UsersApi;
+
     public authUtil: AuthenticationUtil;
 
     constructor(customerId: string, adminService: AdminService, queryService: QueryService, queryFacade: QueryFacade,
-                queriesApi: QueriesApi, chatsApi: ChatsApi, authUtil: AuthenticationUtil) {
+                chatsApi: ChatsApi, corporaApi: CorporaApi, documentsApi: DocumentsApi, encodersApi: EncodersApi,
+                indexApi: IndexApi, jobsApi: JobsApi, largeLanguageModelsApi: LargeLanguageModelsApi,
+                queriesApi: QueriesApi, rerankersApi: RerankersApi, uploadApi: UploadApi, usersApi: UsersApi,
+                authUtil: AuthenticationUtil) {
         this.customerId = customerId;
         this.adminService = adminService;
         this.queryService = queryService;
         this.queryFacade = queryFacade;
-        this.queriesApi = queriesApi;
         this.chatsApi = chatsApi;
+        this.corporaApi = corporaApi;
+        this.documentsApi = documentsApi;
+        this.encodersApi = encodersApi;
+        this.indexApi = indexApi;
+        this.jobsApi = jobsApi;
+        this.largeLanguageModelsApi = largeLanguageModelsApi;
+        this.queriesApi = queriesApi;
+        this.rerankersApi = rerankersApi;
+        this.uploadApi = uploadApi;
+        this.usersApi = usersApi;
+
         this.authUtil = authUtil;
     };
 
@@ -78,8 +111,17 @@ class Factory {
 
             const queryFacade = new QueryFacade(config.customerId, queryService);
 
-            const queriesApi = new QueriesApi();
 			const chatsApi = new ChatsApi();
+            const corporaApi = new CorporaApi();
+            const documentsApi = new DocumentsApi();
+            const encodersApi = new EncodersApi();
+            const indexApi = new IndexApi();
+            const jobsApi = new JobsApi();
+            const largeLanguageModelsApi = new LargeLanguageModelsApi();
+            const queriesApi = new QueriesApi();
+            const rerankersApi = new RerankersApi();
+            const uploadApi = new UploadApi();
+            const usersApi = new UsersApi();
 
             if (authUtil.mode = "OAuth2") {
                 // Add in our interceptor. This will check if we need to refresh
@@ -92,21 +134,51 @@ class Factory {
 
 				// The WiredOAuth effectively becomes a dummy Auth mechanism.
                 const refreshInterceptor = authUtil.buildOAuth2RefreshInterceptor();
-                queriesApi.addInterceptor(refreshInterceptor);
 				chatsApi.addInterceptor(refreshInterceptor);
-                const wiredOAuth = new DummyAuthentication();
-                queriesApi.setDefaultAuthentication(wiredOAuth);
-				chatsApi.setDefaultAuthentication(wiredOAuth);
+                corporaApi.addInterceptor(refreshInterceptor);
+                documentsApi.addInterceptor(refreshInterceptor);
+                encodersApi.addInterceptor(refreshInterceptor);
+                indexApi.addInterceptor(refreshInterceptor);
+                jobsApi.addInterceptor(refreshInterceptor);
+                largeLanguageModelsApi.addInterceptor(refreshInterceptor);
+                queriesApi.addInterceptor(refreshInterceptor);
+                rerankersApi.addInterceptor(refreshInterceptor);
+                uploadApi.addInterceptor(refreshInterceptor);
+                usersApi.addInterceptor(refreshInterceptor);
+
+                const dummyAuth = new DummyAuthentication();
+				chatsApi.setDefaultAuthentication(dummyAuth);
+                corporaApi.setDefaultAuthentication(dummyAuth);
+                documentsApi.setDefaultAuthentication(dummyAuth);
+                encodersApi.setDefaultAuthentication(dummyAuth);
+                indexApi.setDefaultAuthentication(dummyAuth);
+                jobsApi.setDefaultAuthentication(dummyAuth);
+                largeLanguageModelsApi.setDefaultAuthentication(dummyAuth);
+                queriesApi.setDefaultAuthentication(dummyAuth);
+                rerankersApi.setDefaultAuthentication(dummyAuth);
+                uploadApi.setDefaultAuthentication(dummyAuth);
+                usersApi.setDefaultAuthentication(dummyAuth);
+
             } else {
                 // Simpler method to authenticate ... but why the enum??
                 const apiKey : string = (authUtil.apiKey as string);
-                queriesApi.setApiKey(QueriesApiApiKeys.ApiKeyAuth, apiKey);
 				chatsApi.setApiKey(ChatsApiApiKeys.ApiKeyAuth, apiKey)
+                corporaApi.setApiKey(CorporaApiApiKeys.ApiKeyAuth, apiKey);
+                documentsApi.setApiKey(DocumentsApiApiKeys.ApiKeyAuth, apiKey);
+                encodersApi.setApiKey(EncodersApiApiKeys.ApiKeyAuth, apiKey);
+                indexApi.setApiKey(IndexApiApiKeys.ApiKeyAuth, apiKey);
+                jobsApi.setApiKey(JobsApiApiKeys.ApiKeyAuth, apiKey);
+                largeLanguageModelsApi.setApiKey(LargeLanguageModelsApiApiKeys.ApiKeyAuth, apiKey);
+                queriesApi.setApiKey(QueriesApiApiKeys.ApiKeyAuth, apiKey);
+                rerankersApi.setApiKey(RerankersApiApiKeys.ApiKeyAuth, apiKey);
+                uploadApi.setApiKey(UploadApiApiKeys.ApiKeyAuth, apiKey);
+                usersApi.setApiKey(UsersApiApiKeys.ApiKeyAuth, apiKey);
             }
 
 
-            const client = new Client(config.customerId, adminService, queryService, queryFacade, queriesApi,
-                chatsApi, authUtil);
+            const client = new Client(config.customerId, adminService, queryService, queryFacade,
+                chatsApi, corporaApi, documentsApi, encodersApi, indexApi, jobsApi, largeLanguageModelsApi,
+                queriesApi, rerankersApi, uploadApi, usersApi, authUtil);
             console.info("Created client for customer [" + client.customerId + "]")
             return client;
         }).catch((error) => {

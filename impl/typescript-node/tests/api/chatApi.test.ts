@@ -57,7 +57,7 @@ test('Verifies Create Chat Request', async () => {
         searchCorpus.reranker = reranker;
 
         const model = new ModelParameters();
-        model.maxTokens = 0;
+        model.maxTokens = 100;
         model.temperature = 0;
         model.frequencyPenalty = 0;
         model.presencePenalty = 0;
