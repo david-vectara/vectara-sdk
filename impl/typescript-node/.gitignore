@@ -2,6 +2,7 @@ target
 .classpath
 .project
 .settings
+.idea
 wwwroot/*.js
 node_modules
 typings

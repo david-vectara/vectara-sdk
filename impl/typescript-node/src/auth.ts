@@ -1,6 +1,6 @@
 import {Config, ConfigLoader} from './config';
 import {OAuth2Client, OAuth2Token} from "@badgateway/oauth2-client";
-import {Authentication, Interceptor, OAuth} from 'model/models.ts';
+import {Authentication, Interceptor, OAuth} from './model/models';
 import localVarRequest from 'request';
 
 class AuthenticationUtil {
@@ -126,21 +126,29 @@ class AuthenticationUtil {
                             console.info("Token refreshed, applying OAuth in Interceptor");
 
                             if (requestOptions && requestOptions.headers) {
-                                requestOptions.headers["Authorization"] = "Bearer " + this.token.accessToken;
+                                if (this.token) {
+                                    requestOptions.headers["Authorization"] = "Bearer " + this.token.accessToken;
+                                    resolve();
+                                } else {
+                                    reject("Access token is missing")
+                                }
+                            } else {
+                                reject("Request options missing or is missing headers")
                             }
 
-                            resolve(true);
                         } else {
-                            reject("Unable to refresh token.")
+                            reject("Unable to refresh token as refresh failed.")
                         }
                     });
 
                 } else {
                     console.info("No need to refresh, token is valid")
                     if (requestOptions && requestOptions.headers) {
-                        requestOptions.headers["Authorization"] = "Bearer " + this.token.accessToken;
+                        if (this.token) {
+                            requestOptions.headers["Authorization"] = "Bearer " + this.token.accessToken;
+                        }
                     }
-                    resolve(true)
+                    resolve()
                 }
 
             });
