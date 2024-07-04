@@ -1,6 +1,6 @@
 {
   "name": "@david-vectara/vectara-node",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "This is the typescript (Node) implementation of the Vectara SDK for the OpenAPI V2 stubs. Please note, this has the\ndeprecated dependency on the \"request\" package due to the OpenAPI typescript-node generator.",
   "main": "./dist/core.js",
   "module": "./dist/core.mjs",
