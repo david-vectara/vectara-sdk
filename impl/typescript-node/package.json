@@ -1,0 +1,53 @@
+{
+  "name": "vectara-node",
+  "version": "0.0.1",
+  "description": "This is the typescript (Node) implementation of the Vectara SDK for the OpenAPI V2 stubs. Please note, this has the\ndeprecated dependency on the \"request\" package due to the OpenAPI typescript-node generator.",
+  "main": "./dist/core.js",
+  "module": "./dist/core.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build-bak": "tsc -p tsconfig-build.json",
+    "build": "tsup",
+    "test": "jest --testPathPattern=tests",
+    "coverage": "jest --testPathPattern=tests --collectCoverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/david-vectara/vectara-sdk.git"
+  },
+  "keywords": [
+    "sdk",
+    "vectara",
+    "typescript"
+  ],
+  "author": "david@vectara.com",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/david-vectara/vectara-sdk/issues"
+  },
+  "homepage": "https://github.com/david-vectara/vectara-sdk#readme",
+  "devDependencies": {
+    "@babel/core": "^7.24.4",
+    "@babel/preset-env": "^7.24.4",
+    "@babel/preset-typescript": "^7.24.1",
+    "@jest/globals": "^29.7.0",
+    "@types/node": "^20.12.7",
+    "babel-jest": "^29.7.0",
+    "jest": "^29.7.0",
+    "tsup": "^8.0.2",
+    "typescript": "^5.4.5",
+    "request": "2.88.2"
+  },
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {
+    "@badgateway/oauth2-client": "^2.3.0",
+    "@types/js-yaml": "^4.0.9",
+    "axios": "^1.6.8",
+    "request": "2.88.2"
+  }
+}
