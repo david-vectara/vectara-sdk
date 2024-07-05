@@ -1,24 +1,16 @@
 {
   "name": "@david-vectara/vectara-ts-node",
-  "version": "0.0.3",
+  "version": "0.0.12",
   "description": "This is the typescript (Node) implementation of the Vectara SDK for the OpenAPI V2 stubs. Please note, this has the\ndeprecated dependency on the \"request\" package due to the OpenAPI typescript-node generator.",
-  "main_old": "./dist/core.js",
-  "module_old": "./dist/core.mjs",
-  "types_old": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "require": "./dist/core.js",
-      "import": "./dist/core.js",
-      "types": "./dist/core/.d.ts"
-    }
-  },
-
+  "main": "./dist/core.js",
+  "types": "./dist/core.d.ts",
   "files": [
-    "dist"
+    "dist/"
   ],
   "scripts": {
-    "build-bak": "tsc -p tsconfig-build.json",
-    "build": "tsup",
+    "build": "tsc -p tsconfig-build.json",
+    "clean": "tsc --build --clean",
+    "build-bak": "tsup",
     "test": "jest --testPathPattern=tests",
     "coverage": "jest --testPathPattern=tests --collectCoverage"
   },
@@ -42,20 +34,21 @@
     "@babel/preset-env": "^7.24.4",
     "@babel/preset-typescript": "^7.24.1",
     "@jest/globals": "^29.7.0",
+    "@types/js-yaml": "^4.1.0",
     "@types/node": "^20.12.7",
     "babel-jest": "^29.7.0",
     "jest": "^29.7.0",
+    "request": "2.88.2",
     "tsup": "^8.0.2",
-    "typescript": "^5.4.5",
-    "request": "2.88.2"
+    "typescript": "^5.4.5"
   },
   "directories": {
     "test": "tests"
   },
   "dependencies": {
     "@badgateway/oauth2-client": "^2.3.0",
-    "@types/js-yaml": "^4.0.9",
     "axios": "^1.6.8",
+    "js-yaml": "^4.1.0",
     "request": "2.88.2"
   }
 }
