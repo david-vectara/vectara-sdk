@@ -8,11 +8,14 @@ import {Language} from "@david-vectara/vectara-ts-node/dist/model/language";
 import {HttpError} from "@david-vectara/vectara-ts-node/dist/api/apis";
 import {BadRequestError} from "@david-vectara/vectara-ts-node/dist/model/badRequestError";
 import {ObjectSerializer} from "@david-vectara/vectara-ts-node/dist/model/models";
+import {Config} from "@david-vectara/vectara-ts-node/dist";
 // FIXME Get these exported from model
 
-const factory = new Factory();
 
 const app: Express = express();
+
+const config = new Config("YOUR_CUSTOMER_ID", {"apiKey": "YOUR_API_KEY"});
+const factory = new Factory();
 
 
 factory.build().then((temp) => {
