@@ -6,6 +6,7 @@ from vectara_client.api import (ChatsApi, CorporaApi, DocumentsApi, EncodersApi,
                                 LargeLanguageModelsApi, QueriesApi, RerankersApi, UploadApi, UsersApi)
 from vectara_client.corpus import CorpusManager
 from vectara_client.rest import ApiException
+from vectara_client.our_rest import OurRESTClientObject
 from pprint import pprint
 import os
 
@@ -107,6 +108,9 @@ class Factory():
 
         # Enter a context with an instance of the API client
         api_client = vectara_client.ApiClient(configuration)
+
+        # Override rest client with our method that correctly sets the mime type for metadata on upload.
+        api_client.rest_client = OurRESTClientObject(configuration)
 
         # Create an instance of the API class
         # api_instance = vectara_client.ApplicationClientsApi(api_client)
