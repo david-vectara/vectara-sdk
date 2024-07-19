@@ -21,6 +21,7 @@ import ssl
 import urllib3
 
 from vectara_client.exceptions import ApiException, ApiValueError
+from urllib3.fields import RequestField
 
 SUPPORTED_SOCKS_PROXIES = {"socks5", "socks5h", "socks4", "socks4a"}
 RESTResponseType = urllib3.HTTPResponse
@@ -205,6 +206,18 @@ class RESTClientObject:
                     del headers['Content-Type']
                     # Ensures that dict objects are serialized
                     post_params = [(a, json.dumps(b)) if isinstance(b, dict) else (a,b) for a, b in post_params]
+
+                    ## Manually override metadata tuple to be application json.
+                    #for index, post_param in enumerate(post_params):
+                    #    field_name = post_param[0]
+                    #    if field_name == "metadata":
+                    #
+                    #        field = RequestField(field_name, post_param[1])#, headers={"Content-Type": "application/json"})
+                    #
+                    #        #new_tuple = (post_param[0], post_param[1], "application/json")
+                    #        post_params[index] = field
+                    #        break
+
                     r = self.pool_manager.request(
                         method,
                         url,

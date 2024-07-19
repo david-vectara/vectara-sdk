@@ -4,9 +4,7 @@ from vectara_client.config import JsonConfigLoader, PathConfigLoader, HomeConfig
 from vectara_client.auth import OAuthUtil, ApiKeyUtil
 from vectara_client.api import (ChatsApi, CorporaApi, DocumentsApi, EncodersApi, IndexApi, JobsApi,
                                 LargeLanguageModelsApi, QueriesApi, RerankersApi, UploadApi, UsersApi)
-# from vectara_client.corpus import CorpusManager
-from vectara_client.models.app_client import AppClient
-from vectara_client.models.create_app_client_request import CreateAppClientRequest
+from vectara_client.corpus import CorpusManager
 from vectara_client.rest import ApiException
 from pprint import pprint
 import os
@@ -17,7 +15,7 @@ class Client:
     def __init__(self, customer_id: str, chats_api: ChatsApi, corpora_api: CorporaApi, documents_api: DocumentsApi,
                  encoders_api: EncodersApi, index_api: IndexApi, jobs_api: JobsApi,
                  llms_api: LargeLanguageModelsApi, queries_api: QueriesApi, rerankers_api: RerankersApi,
-                 upload_api: UploadApi, users_api: UsersApi):
+                 upload_api: UploadApi, users_api: UsersApi, corpus_manager: CorpusManager):
         self.logging = logging.getLogger(self.__class__.__name__)
         logging.info("initializing Client")
         self.customer_id = customer_id
@@ -33,6 +31,7 @@ class Client:
         self.rerankers_api = rerankers_api
         self.upload_api = upload_api
         self.users_api = users_api
+        self.corpus_manager = corpus_manager
 
 
 class Factory():
@@ -125,7 +124,7 @@ class Factory():
         upload_api = UploadApi(api_client)
         users_api = UsersApi(api_client)
 
-
+        corpus_manager = CorpusManager(corpora_api, index_api)
 
         # try:
         #    # Create an App Client
@@ -139,4 +138,4 @@ class Factory():
         # corpus_manager = CorpusManager(admin_service, indexer_service)
 
         return Client(client_config.customer_id, chats_api, corpora_api, documents_api, encoders_api, index_api,
-                      jobs_api, llms_api, queries_api, rerankers_api, upload_api, users_api)
+                      jobs_api, llms_api, queries_api, rerankers_api, upload_api, users_api, corpus_manager)

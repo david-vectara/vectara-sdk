@@ -8,3 +8,6 @@ target
 .project
 
 .openapi-generator
+
+vectara_client.egg-info/
+**/__pycache__/
