@@ -1,9 +1,92 @@
 from vectara_client.util import CountDownLatch
 from vectara_client.api import CorporaApi, IndexApi
-from vectara_client.models import CreateCorpusRequest, CreateDocumentRequest, Corpus
+from vectara_client.models import (CreateCorpusRequest, CreateDocumentRequest, Corpus, FilterAttribute,
+                                   CorpusCustomDimension)
 from typing import List, Union
 from threading import Thread
 import logging
+import re
+
+class CorpusBuilder:
+
+    corpus: CreateCorpusRequest
+
+    def __init__(self, name: str, corpus_key: str = None):
+        self.logger = logging.getLogger(self.__class__.__name__)
+
+        if not corpus_key:
+            corpus_key = re.sub(r'[\s]+', '-', name.lower())
+
+        CreateCorpusRequest.key_validate_regular_expression(corpus_key)
+
+        self.corpus = CreateCorpusRequest.from_dict({
+            'name': name,
+            'key': corpus_key,
+            'custom_dimensions': [],
+            'filter_attributes': []
+        })
+
+    def name(self, name: str):
+        self.corpus.name = name
+        return self
+
+    def key(self, key: str):
+        CreateCorpusRequest.key_validate_regular_expression(key)
+        self.corpus.key = key
+        return self
+
+    def description(self, description: str):
+        self.corpus.description = description
+        return self
+
+    def add_attribute(self, name: str, description: str = None, indexed: bool = True, type: str = "text",
+                      document: bool = True):
+        """
+        Adds a filter attribute to the given corpus.
+
+        :param name: The name of this corpus.
+        :param description: Description for this filter attribute.
+        :param indexed: Whether this attribute is indexed (defaults to True)
+        :param type: the type is taken from the FilterAttributeType and defaults to "text". This is matched to
+        FilterAttributeType.FILTER_ATTRIBUTE_TYPE__TEXT
+        :param document: Whether this is at the "document" or the "document_part"
+        :return: ourselves
+        """
+        filter_attribute_type = FilterAttribute.type_validate_enum(type)
+
+        if document:
+            level = "document"
+        else:
+            level = "part"
+
+        attribute_dict = {
+            "name": name,
+            "description": description,
+            "indexed": indexed,
+            "type": filter_attribute_type,
+            "level": level
+        }
+        attribute = FilterAttribute.from_dict(attribute_dict)
+
+        self.corpus.filter_attributes.append(attribute)
+        return self
+
+    def add_dimension(self, name: str, indexing_default: Union[int, float] = 0,
+                      querying_default: Union[int, float] = 0):
+
+        dimension = CorpusCustomDimension.from_dict({
+            "name": name,
+            "indexing_default": indexing_default,
+            "querying_default": querying_default
+        })
+
+        self.corpus.custom_dimensions.append(dimension)
+
+        return self
+
+    def build(self):
+        return self.corpus
+
 
 class SubIndexer:
     """
@@ -50,6 +133,9 @@ class CorpusManager:
         self.corpora_api = corpora_api
         self.index_api = index_api
 
+    def builder(self, name: str) -> CorpusBuilder:
+        return CorpusBuilder(name)
+
     def find_corpora_by_name(self, name: str) -> List[int]:
         corpora = self.corpora_api.list_corpora(filter=name).corpora
 
@@ -67,7 +153,7 @@ class CorpusManager:
         return found
 
 
-    def find_corpus_by_name(self, name: str, fail_if_not_exist=True) -> int | None:
+    def find_corpus_by_name(self, name: str, fail_if_not_exist=True) -> Corpus | None:
         corpora = self.corpora_api.list_corpora(filter=name).corpora
 
         found = None
@@ -87,10 +173,10 @@ class CorpusManager:
                 self.logger.info("No corpus with name [" + name + "] can be found")
                 return None
         else:
-            corpus_id = found.id
+            corpus_key = found.key
 
-        self.logger.info(f"Our corpus id is [{corpus_id}]")
-        return corpus_id
+        self.logger.info(f"Our corpus key is [{corpus_key}]")
+        return found
 
     def delete_corpus_by_name(self, name: str) -> bool:
         self.logger.info(f"Deleting existing corpus named [{name}]")
