@@ -71,34 +71,33 @@ class Client {
 
 class Factory {
 
-    config?: Config;
+    _config: Config | null = null;
     profileName: string = ConfigLoader.DEFAULT_PROFILE;
     configFilePath: string = ConfigLoader.DEFAULT_CONFIG
 
-    constructor() {
-
+    config(config : Config) : Factory {
+        this._config = config;
+        return this;
     }
 
-    setConfig(input: Config) {
-        this.config = input;
+    profile(profileName: string) : Factory {
+        this.profileName = profileName;
+        return this
     }
 
-    setConfigFile(input: string) {
-        this.configFilePath = input;
-    }
-
-    setProfileName(input: string) {
-        this.profileName = input;
+    path(configFilePath: string) : Factory {
+        this.configFilePath = configFilePath;
+        return this
     }
 
     async build(): Promise<Client | void> {
-        if (this.config == null) {
+        if (this._config == null) {
             let configLoader = new ConfigLoader()
-            this.config = configLoader.load(this.configFilePath, this.profileName);
+            this._config = configLoader.load(this.configFilePath, this.profileName);
         }
 
-        let config = this.config;
-        let authUtil = new AuthenticationUtil(this.config);
+        let config = this._config;
+        let authUtil = new AuthenticationUtil(this._config);
 
         return authUtil.initialize().then((value) => {
 
@@ -111,7 +110,7 @@ class Factory {
 
             const queryFacade = new QueryFacade(config.customerId, queryService);
 
-			const chatsApi = new ChatsApi();
+            const chatsApi = new ChatsApi();
             const corporaApi = new CorporaApi();
             const documentsApi = new DocumentsApi();
             const encodersApi = new EncodersApi();
@@ -123,18 +122,18 @@ class Factory {
             const uploadApi = new UploadApi();
             const usersApi = new UsersApi();
 
-            if (authUtil.mode = "OAuth2") {
+            if (authUtil.mode == "OAuth2") {
                 // Add in our interceptor. This will check if we need to refresh
-				// our OAuth2 token in a promise, which needs to be done inside
-				// a promise to avoid waiting.
+                // our OAuth2 token in a promise, which needs to be done inside
+                // a promise to avoid waiting.
 
-				// For some reason, the authentication headers are "set" before the
-				// interceptors so the only way to ensure the correct token is used is to
-				// set our Authentication header inside the interceptor.
+                // For some reason, the authentication headers are "set" before the
+                // interceptors so the only way to ensure the correct token is used is to
+                // set our Authentication header inside the interceptor.
 
-				// The WiredOAuth effectively becomes a dummy Auth mechanism.
+                // The WiredOAuth effectively becomes a dummy Auth mechanism.
                 const refreshInterceptor = authUtil.buildOAuth2RefreshInterceptor();
-				chatsApi.addInterceptor(refreshInterceptor);
+                chatsApi.addInterceptor(refreshInterceptor);
                 corporaApi.addInterceptor(refreshInterceptor);
                 documentsApi.addInterceptor(refreshInterceptor);
                 encodersApi.addInterceptor(refreshInterceptor);
@@ -147,7 +146,7 @@ class Factory {
                 usersApi.addInterceptor(refreshInterceptor);
 
                 const dummyAuth = new DummyAuthentication();
-				chatsApi.setDefaultAuthentication(dummyAuth);
+                chatsApi.setDefaultAuthentication(dummyAuth);
                 corporaApi.setDefaultAuthentication(dummyAuth);
                 documentsApi.setDefaultAuthentication(dummyAuth);
                 encodersApi.setDefaultAuthentication(dummyAuth);
@@ -161,8 +160,8 @@ class Factory {
 
             } else {
                 // Simpler method to authenticate ... but why the enum??
-                const apiKey : string = (authUtil.apiKey as string);
-				chatsApi.setApiKey(ChatsApiApiKeys.ApiKeyAuth, apiKey)
+                const apiKey: string = (authUtil.apiKey as string);
+                chatsApi.setApiKey(ChatsApiApiKeys.ApiKeyAuth, apiKey)
                 corporaApi.setApiKey(CorporaApiApiKeys.ApiKeyAuth, apiKey);
                 documentsApi.setApiKey(DocumentsApiApiKeys.ApiKeyAuth, apiKey);
                 encodersApi.setApiKey(EncodersApiApiKeys.ApiKeyAuth, apiKey);
@@ -183,7 +182,6 @@ class Factory {
             return client;
         }).catch((error) => {
             console.error("Unable to initalize AuthenticationUtil: " + error.message);
-            throw error;
         });
 
 
@@ -191,6 +189,6 @@ class Factory {
 
 }
 
-export {Client, Factory};
+export {Client, Factory, Config};
 
 

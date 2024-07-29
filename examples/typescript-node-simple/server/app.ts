@@ -1,22 +1,21 @@
 //import {Client, Factory} from "@david-vectara/vectara-ts-node";
 import express, {Express, Request, Response} from "express";
-import {Client, Factory} from "@david-vectara/vectara-ts-node";
-import {SearchCorpusParameters} from "@david-vectara/vectara-ts-node/dist/model/searchCorpusParameters";
+
+import {Client, Config, Factory} from "@david-vectara/vectara-ts-node";
 import {GenerationParameters} from "@david-vectara/vectara-ts-node/dist/model/generationParameters";
-import {QueryCorpusRequest} from "@david-vectara/vectara-ts-node/dist/model/queryCorpusRequest";
 import {Language} from "@david-vectara/vectara-ts-node/dist/model/language";
-import {HttpError} from "@david-vectara/vectara-ts-node/dist/api/apis";
+import {QueryCorpusRequest} from "@david-vectara/vectara-ts-node/dist/model/queryCorpusRequest";
 import {BadRequestError} from "@david-vectara/vectara-ts-node/dist/model/badRequestError";
+import {SearchCorpusParameters} from "@david-vectara/vectara-ts-node/models";
 import {ObjectSerializer} from "@david-vectara/vectara-ts-node/dist/model/models";
-import {Config} from "@david-vectara/vectara-ts-node/dist";
+import {QueriesApi} from "@david-vectara/vectara-ts-node/dist/api/queriesApi";
 // FIXME Get these exported from model
 
 
 const app: Express = express();
 
-const config = new Config("YOUR_CUSTOMER_ID", {"apiKey": "YOUR_API_KEY"});
-const factory = new Factory();
-
+//const config = new Config("YOUR_CUSTOMER_ID", {"apiKey": "YOUR_API_KEY"});
+//const factory = new Factory().config(config);
 
 factory.build().then((temp) => {
 
@@ -27,7 +26,7 @@ factory.build().then((temp) => {
 
     app.get("/", (httpReq: Request, res: Response) => {
 
-        const queriesApi = client.queriesApi;
+        const queriesApi = (client.queriesApi as QueriesApi);
 
         let corpusKey = null;
 
@@ -81,9 +80,12 @@ factory.build().then((temp) => {
             console.log("Failure calling chat: " + httpError.statusCode);
 
             console.log("Field errors")
-            for (let fieldError in body.fieldErrors) {
-                console.log("Field error: " + fieldError);
+            if (body.fieldErrors) {
+                for (let fieldError in body.fieldErrors) {
+                    console.log("Field error: " + fieldError);
+                }
             }
+
 
             console.log("Message was: " + httpError.message);
 

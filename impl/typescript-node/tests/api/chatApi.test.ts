@@ -29,67 +29,48 @@ test('Verifies Create Chat Request', async () => {
 
         console.log("Running query");
 
-
-        const key = new KeyedSearchCorpus();
-        key.customDimensions = {};
-        key.metadataFilter = "";
-        key.lexicalInterpolation = 0.025;
-        key.semantics = SearchSemantics.Default;
-        key.corpusKey = "vectara-docs_314";
-
-        const context = new ContextConfiguration();
-        context.charactersBefore = 30;
-        context.charactersAfter = 30;
-        context.sentencesBefore = 3;
-        context.sentencesAfter = 3;
-        context.startTag = "<em>";
-        context.endTag = "</em>";
-
-        const reranker = new SearchReranker();
-        reranker.type = "customer_reranker";
-        reranker.rerankerId = "rnk_272725719";
-
-        const searchCorpus = new SearchCorporaParameters();
-        searchCorpus.corpora = [key];
-        searchCorpus.offset = 0;
-        searchCorpus.limit = 10;
-        searchCorpus.contextConfiguration = context;
-        searchCorpus.reranker = reranker;
-
-        const model = new ModelParameters();
-        model.maxTokens = 100;
-        model.temperature = 0;
-        model.frequencyPenalty = 0;
-        model.presencePenalty = 0;
-
-        const citations = new CitationParameters();
-
-        const generation = new GenerationParameters();
-        generation.promptName = "vectara-summary-ext-v1.3.0";
-        generation.maxUsedSearchResults = 5;
-        generation.promptText = "[\n  {\"role\": \"system\", \"content\": \"You are a helpful search assistant.\"},\n  #foreach ($qResult in $vectaraQueryResults)\n     {\"role\": \"user\", \"content\": \"Given the $vectaraIdxWord[$foreach.index] search result.\"},\n     {\"role\": \"assistant\", \"content\": \"${qResult.getText()}\" },\n  #end\n  {\"role\": \"user\", \"content\": \"Generate a summary for the query '${vectaraQuery}' based on the above results.\"}\n]\n";
-        generation.maxResponseCharacters = 300;
-        generation.responseLanguage = Language.Auto;
-        generation.modelParameters = model;
-        generation.citations = citations;
-        generation.enableFactualConsistencyScore = false;
-
-        const chat = new ChatParameters();
-        chat.store = true;
-
-        const request = new ChatRequest();
-        request.query = "What is the difference between the standard and low level APIs in Vectara for indexing?"
-        request.search = searchCorpus;
-        request.generation = generation;
-        request.chat = chat;
-        request.streamResponse = false;
-
+        const request: ChatRequest = {
+            query: "What is the difference between the standard and low level APIs in Vectara for indexing?",
+            search: {
+                corpora: [
+                    {
+//                        customDimensions: {},
+//                        metadataFilter: "",
+                        lexicalInterpolation: 0.025,
+//                        semantics: SearchSemantics.Default,
+                        corpusKey: "vectara-docs_314"
+                    }
+                ],
+                offset: 0,
+                limit: 10,
+                contextConfiguration: {
+                    sentencesBefore: 3,
+                    sentencesAfter: 3,
+                    startTag: "<em>",
+                    endTag: "</em>"
+                },
+                reranker: {
+                    type: "customer_reranker",
+                    rerankerId: "rnk_272725719"
+                }
+            },
+            generation: {
+                promptName: "vectara-summary-ext-v1.3.0",
+                maxUsedSearchResults: 5,
+                promptText: "[\n  {\"role\": \"system\", \"content\": \"You are a helpful search assistant.\"},\n  #foreach ($qResult in $vectaraQueryResults)\n     {\"role\": \"user\", \"content\": \"Given the $vectaraIdxWord[$foreach.index] search result.\"},\n     {\"role\": \"assistant\", \"content\": \"${qResult.getText()}\" },\n  #end\n  {\"role\": \"user\", \"content\": \"Generate a summary for the query '${vectaraQuery}' based on the above results.\"}\n]\n",
+                maxResponseCharacters: 300,
+                responseLanguage: Language.Auto,
+                modelParameters: {maxTokens: 100},
+                enableFactualConsistencyScore: false,
+            },
+            chat: {store: true},
+            streamResponse: false
+        }
         console.log("Chat request is: " + JSON.stringify(ObjectSerializer.serialize(request, "ChatRequest"), null, 4));
 
         await chatsApi.createChat(request).then(value => {
             const body = value.body;
             const resp = value.response;
-
 
 
             console.log("Received " + resp.statusCode + " with message: " + resp.statusMessage);

@@ -108,12 +108,10 @@ class AuthenticationUtil {
                 if (this.token != null) {
                     const expiresTimestamp = (this.token as OAuth2Token).expiresAt as number;
 
-
                     if (currentTimestamp > expiresTimestamp) {
                         console.info("Token expiry timestamp [" + expiresTimestamp + "] is below current timestamp [" + currentTimestamp + "], we must refresh");
                         refresh = true;
                     }
-
 
                 } else {
                     console.info("No token, we must refresh")

@@ -110,4 +110,5 @@ class QueryFacade {
 }
 
 
+
 export { QueryService, QueryFacade }

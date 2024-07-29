@@ -3,19 +3,21 @@
   "version": "1.0.0",
   "description": "A very small example of a Node.JS application which uses the typescript-node library for Vectara V2 APIs",
   "main": "app.ts",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npx tsx server/app.ts"
   },
   "author": "david@vectara.com",
   "license": "Apache-2.0",
   "keywords": [],
   "dependencies": {
-    "@david-vectara/vectara-ts-node": "^0.0.12",
+    "@david-vectara/vectara-ts-node": "^0.0.21",
     "express": "^4.19.2"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
     "@types/node": "^20.14.9",
+    "tsx": "^4.16.2",
     "typescript": "^5.5.3"
   }
 }
