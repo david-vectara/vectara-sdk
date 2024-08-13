@@ -9,12 +9,12 @@
         "rest",
         "api"
     ],
-    "homepage": "https://openapi-generator.tech",
-    "license": "unlicense",
+    "homepage": "https://www.vectara.com",
+    "license": "Apache License V2.0",
     "authors": [
         {
-            "name": "OpenAPI",
-            "homepage": "https://openapi-generator.tech"
+            "name": "David Levy",
+            "homepage": "https://www.vectara.com"
         }
     ],
     "require": {
