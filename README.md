@@ -1,4 +1,10 @@
-# Vectara-SDK
+# Do Not Use #
+This code has been **deprecated** in favour of the FERN generated SDKs for Python and Typescript:
+
+* [TypeScript-SDK](https://github.com/vectara/typescript-sdk) 
+* [Python-SDK](https://github.com/vectara/python-sdk)
+
+# Vectara-SDK (Deprecated)
 
 This repository will host all flavours of the Vectara-SDK and will have multiple implementations.
 
